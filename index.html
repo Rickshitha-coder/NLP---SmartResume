@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartResume — Resume Keyword &amp; Job Match Analyzer</title>
+<meta name="description" content="Compare your resume with any job description using lightweight, browser-based NLP. 100% client-side, private by design.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+<!-- App styles -->
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg navbar-sr fixed-top">
+  <div class="container">
+    <a class="navbar-brand brand-block" href="#top">
+      <span class="brand-title">SmartResume </span>
+      <span class="brand-sub">Resume Intelligence</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link nav-link-sr" href="#analyzer">Analyzer</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-sr" href="#results">Insights</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-sr" href="#history">History</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-sr" href="#how-it-works">How It Works</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <p class="eyebrow">Resume Intelligence, Locally Computed</p>
+        <h1 class="hero-heading">Turn your resume<br>into your <span class="accent">next opportunity.</span></h1>
+        <p class="hero-subtitle">Compare your resume with any job description, discover missing skills, and understand your match using lightweight browser-based NLP.</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="#analyzer" class="btn-coral">Analyze My Resume</a>
+          <a href="#how-it-works" class="btn-outline-plum">How It Works</a>
+        </div>
+        <div class="badge-row">
+          <span class="info-badge"><i class="bi bi-cpu"></i> Client-Side NLP</span>
+          <span class="info-badge"><i class="bi bi-key"></i> No API Required</span>
+          <span class="info-badge"><i class="bi bi-shield-lock"></i> Private by Design</span>
+        </div>
+      </div>
+      <div class="col-lg-6 hero-visual">
+        <div class="mock-card">
+          <div class="mock-card-header">
+            <span class="mock-card-label">Resume Match</span>
+            <i class="bi bi-graph-up-arrow" style="color:var(--coral)"></i>
+          </div>
+          <div class="mock-score-ring"><div class="mock-score-inner">78%</div></div>
+          <div class="mock-skill-row"><span>React</span><span class="mock-check">✓</span></div>
+          <div class="mock-skill-row"><span>JavaScript</span><span class="mock-check">✓</span></div>
+          <div class="mock-skill-row"><span>Git</span><span class="mock-plus">+</span></div>
+          <div class="mock-skill-row"><span>Docker</span><span class="mock-plus">+</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= ANALYZER ================= -->
+<section class="section-pad" id="analyzer">
+  <div class="container">
+    <p class="eyebrow text-center">Analyzer</p>
+    <h2 class="section-heading text-center mx-auto">Analyze Your Match</h2>
+    <p class="section-subtitle text-center mx-auto mb-3">Upload your documents or paste the text. We'll compare the skills and language used in both.</p>
+    <div class="text-center mb-5">
+      <button class="btn-ghost" id="btnTrySample" type="button"><i class="bi bi-stars"></i> Try Sample Analysis</button>
+    </div>
+
+    <div class="row g-4">
+      <!-- RESUME CARD -->
+      <div class="col-lg-6">
+        <div class="sr-card h-100" id="resumeCard">
+          <h3 class="h5 mb-1"><i class="bi bi-file-earmark-person me-2" style="color:var(--coral)"></i>Your Resume</h3>
+          <div class="input-mode-toggle mt-3" role="tablist" aria-label="Resume input mode">
+            <button class="input-mode-btn active" data-target="resume" data-mode="upload" type="button">Upload Document</button>
+            <button class="input-mode-btn" data-target="resume" data-mode="paste" type="button">Paste Text</button>
+          </div>
+
+          <div id="resumeUploadPanel">
+            <div class="dropzone" id="resumeDropzone" tabindex="0" role="button" aria-label="Upload resume file">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <p class="dropzone-title mb-0">Upload Resume</p>
+              <p class="dropzone-hint">Drag &amp; drop your document here, or</p>
+              <button class="btn-outline-plum btn-sm mt-1" type="button" id="resumeBrowseBtn">Browse Files</button>
+              <p class="dropzone-formats">PDF • DOCX • TXT</p>
+              <input type="file" id="resumeFileInput" accept=".pdf,.docx,.txt" class="d-none" aria-hidden="true">
+            </div>
+            <div id="resumeFileChip"></div>
+            <div id="resumeStatus"></div>
+          </div>
+
+          <div id="resumePastePanel" class="d-none">
+            <label for="resumePasteArea" class="visually-hidden">Paste resume text</label>
+            <textarea id="resumePasteArea" class="paste-area" placeholder="Paste your resume text here..."></textarea>
+          </div>
+
+          <div id="resumeStats" class="stat-row d-none">
+            <span>Words: <strong id="resumeWordCount">0</strong></span>
+            <span>Characters: <strong id="resumeCharCount">0</strong></span>
+          </div>
+          <div class="mt-2">
+            <button class="btn-ghost d-none" id="resumePreviewToggle" type="button">Preview Extracted Text</button>
+          </div>
+          <div id="resumePreviewBox" class="preview-box d-none"></div>
+
+          <div class="d-flex gap-2 mt-3 flex-wrap">
+            <button class="btn-ghost d-none" id="resumeReplaceBtn" type="button"><i class="bi bi-arrow-repeat"></i> Replace</button>
+            <button class="btn-ghost danger d-none" id="resumeRemoveBtn" type="button"><i class="bi bi-x-lg"></i> Remove</button>
+            <button class="btn-ghost danger" id="resumeClearBtn" type="button"><i class="bi bi-eraser"></i> Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- JOB DESCRIPTION CARD -->
+      <div class="col-lg-6">
+        <div class="sr-card h-100" id="jobCard">
+          <h3 class="h5 mb-1"><i class="bi bi-briefcase me-2" style="color:var(--coral)"></i>Job Description</h3>
+
+          <label for="jobTitleInput" class="form-label small fw-bold mt-2 mb-1" style="color:var(--plum)">Job Title / Position <span class="text-muted fw-normal">(optional)</span></label>
+          <input type="text" id="jobTitleInput" class="form-control mb-3" placeholder="e.g. Frontend Developer Intern">
+
+          <div class="input-mode-toggle" role="tablist" aria-label="Job description input mode">
+            <button class="input-mode-btn active" data-target="job" data-mode="upload" type="button">Upload Document</button>
+            <button class="input-mode-btn" data-target="job" data-mode="paste" type="button">Paste Text</button>
+          </div>
+
+          <div id="jobUploadPanel">
+            <div class="dropzone" id="jobDropzone" tabindex="0" role="button" aria-label="Upload job description file">
+              <i class="bi bi-cloud-arrow-up"></i>
+              <p class="dropzone-title mb-0">Upload Job Description</p>
+              <p class="dropzone-hint">Drag &amp; drop your document here, or</p>
+              <button class="btn-outline-plum btn-sm mt-1" type="button" id="jobBrowseBtn">Browse Files</button>
+              <p class="dropzone-formats">PDF • DOCX • TXT</p>
+              <input type="file" id="jobFileInput" accept=".pdf,.docx,.txt" class="d-none" aria-hidden="true">
+            </div>
+            <div id="jobFileChip"></div>
+            <div id="jobStatus"></div>
+          </div>
+
+          <div id="jobPastePanel" class="d-none">
+            <label for="jobPasteArea" class="visually-hidden">Paste job description text</label>
+            <textarea id="jobPasteArea" class="paste-area" placeholder="Paste the job description text here..."></textarea>
+          </div>
+
+          <div id="jobStats" class="stat-row d-none">
+            <span>Words: <strong id="jobWordCount">0</strong></span>
+            <span>Characters: <strong id="jobCharCount">0</strong></span>
+          </div>
+          <div class="mt-2">
+            <button class="btn-ghost d-none" id="jobPreviewToggle" type="button">Preview Extracted Text</button>
+          </div>
+          <div id="jobPreviewBox" class="preview-box d-none"></div>
+
+          <div class="d-flex gap-2 mt-3 flex-wrap">
+            <button class="btn-ghost d-none" id="jobReplaceBtn" type="button"><i class="bi bi-arrow-repeat"></i> Replace</button>
+            <button class="btn-ghost danger d-none" id="jobRemoveBtn" type="button"><i class="bi bi-x-lg"></i> Remove</button>
+            <button class="btn-ghost danger" id="jobClearBtn" type="button"><i class="bi bi-eraser"></i> Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analyze-cta">
+      <button class="btn-coral btn-lg px-5" id="analyzeBtn" disabled>Analyze Match <i class="bi bi-arrow-right"></i></button>
+      <div id="pipelineSteps" class="pipeline-steps d-none">
+        <span class="step" data-step="1">Reading content</span>
+        <span>→</span>
+        <span class="step" data-step="2">Extracting keywords</span>
+        <span>→</span>
+        <span class="step" data-step="3">Detecting skills</span>
+        <span>→</span>
+        <span class="step" data-step="4">Comparing requirements</span>
+        <span>→</span>
+        <span class="step" data-step="5">Calculating match</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section class="section-pad" id="results" style="background:var(--white)">
+  <div class="container">
+    <p class="eyebrow text-center">Insights</p>
+    <h2 class="section-heading text-center mx-auto">Analysis Results</h2>
+    <p class="section-subtitle text-center mx-auto mb-5">Based on recognized skills and language in the provided documents.</p>
+
+    <div id="resultsEmptyState" class="empty-state">
+      <i class="bi bi-clipboard-data"></i>
+      <p class="mb-0 fw-bold" style="color:var(--plum)">No analysis yet</p>
+      <p>Upload your resume and a job description to see your first match report.</p>
+    </div>
+
+    <div id="resultsContent" class="d-none">
+      <!-- Overall score -->
+      <div class="score-hero mb-5">
+        <p class="eyebrow">Overall Skill Match</p>
+        <div class="score-ring-lg" id="scoreRing">
+          <div class="score-ring-inner">
+            <span class="score-value" id="scoreValue">0%</span>
+            <span class="score-label">Match Score</span>
+          </div>
+        </div>
+        <p class="text-muted small" id="scoreExplain">Calculated from recognized skills in the provided resume and job description.</p>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
+          <div class="sr-card summary-card"><i class="bi bi-tools"></i><div class="num" id="statSkillsFound">0</div><div class="lbl">Skills Found</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="sr-card summary-card"><i class="bi bi-check-circle"></i><div class="num" id="statMatching">0</div><div class="lbl">Matching</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="sr-card summary-card"><i class="bi bi-exclamation-circle"></i><div class="num" id="statMissing">0</div><div class="lbl">Missing</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="sr-card summary-card"><i class="bi bi-key"></i><div class="num" id="statKeywords">0</div><div class="lbl">Keywords</div></div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+          <div class="sr-card h-100">
+            <h3 class="h6" style="color:var(--success)"><i class="bi bi-check2-circle"></i> Skills You Already Have</h3>
+            <div id="matchingSkillsList"></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="sr-card h-100">
+            <h3 class="h6" style="color:#C05B45"><i class="bi bi-flag"></i> Skills to Consider</h3>
+            <div id="missingSkillsList"></div>
+            <p class="small text-muted mt-2 mb-0">These skills appear in the job description but were not detected in the resume.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="sr-card h-100">
+            <h3 class="h6" style="color:var(--plum-light)"><i class="bi bi-plus-circle"></i> Additional Resume Skills</h3>
+            <div id="additionalSkillsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+          <div class="sr-card h-100">
+            <h3 class="h6">Important Keywords — Job Description</h3>
+            <div id="jobKeywordsList"></div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="sr-card h-100">
+            <h3 class="h6">Text Similarity</h3>
+            <div class="d-flex align-items-center gap-3">
+              <span class="score-value" style="font-size:2rem" id="similarityValue">0%</span>
+              <p class="small text-muted mb-0">This measures overlap between important terms in the resume and job description.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+          <div class="sr-card h-100">
+            <h3 class="h6">Resume Statistics</h3>
+            <ul class="list-unstyled small mb-0" id="resumeStatsList"></ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="sr-card h-100">
+            <h3 class="h6">Job Description Statistics</h3>
+            <ul class="list-unstyled small mb-0" id="jobStatsList"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+          <div class="sr-card h-100">
+            <h3 class="h6">Skill Category Analysis</h3>
+            <div id="categoryBreakdown"></div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="sr-card h-100">
+            <h3 class="h6"><i class="bi bi-lightbulb"></i> Resume Improvement Insights</h3>
+            <div id="insightsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button class="btn-coral" id="saveAnalysisBtn"><i class="bi bi-save"></i> Save Analysis</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HISTORY ================= -->
+<section class="section-pad" id="history">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+      <div>
+        <p class="eyebrow mb-1">History</p>
+        <h2 class="section-heading mb-0">Analysis History</h2>
+      </div>
+      <button class="btn-ghost danger d-none" id="clearHistoryBtn" type="button"><i class="bi bi-trash"></i> Clear All History</button>
+    </div>
+    <div id="historyEmptyState" class="empty-state">
+      <i class="bi bi-clock-history"></i>
+      <p class="mb-0 fw-bold" style="color:var(--plum)">No analyses yet.</p>
+      <p>Analyze a resume and job description to start building your history.</p>
+    </div>
+    <div class="row g-3" id="historyList"></div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="section-pad" id="how-it-works" style="background:var(--white)">
+  <div class="container">
+    <p class="eyebrow text-center">Process</p>
+    <h2 class="section-heading text-center mx-auto">How It Works</h2>
+    <div class="row g-4 mt-2">
+      <div class="col-md-3 col-6">
+        <div class="sr-card step-card"><div class="step-number">01</div><h3 class="h6 mt-2">Upload</h3><p class="small text-muted mb-0">Upload PDF, DOCX, TXT or paste text.</p></div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="sr-card step-card"><div class="step-number">02</div><h3 class="h6 mt-2">Process</h3><p class="small text-muted mb-0">Text is processed locally in your browser.</p></div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="sr-card step-card"><div class="step-number">03</div><h3 class="h6 mt-2">Compare</h3><p class="small text-muted mb-0">Skills and important keywords are compared.</p></div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="sr-card step-card"><div class="step-number">04</div><h3 class="h6 mt-2">Understand</h3><p class="small text-muted mb-0">View your match score and missing skills.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NLP EDUCATION ================= -->
+<section class="section-pad">
+  <div class="container">
+    <p class="eyebrow text-center">Under the Hood</p>
+    <h2 class="section-heading text-center mx-auto">Behind the Analysis</h2>
+    <div class="accordion mt-4" id="eduAccordion">
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#edu1">Tokenization</button></h3>
+        <div id="edu1" class="accordion-collapse collapse show" data-bs-parent="#eduAccordion"><div class="accordion-body">Breaks text into smaller pieces called tokens so the application can analyze the content.</div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#edu2">Stop-word Removal</button></h3>
+        <div id="edu2" class="accordion-collapse collapse" data-bs-parent="#eduAccordion"><div class="accordion-body">Filters out common words like "the" or "and" that carry little meaning, so the analysis focuses on meaningful terms.</div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#edu3">Keyword Extraction</button></h3>
+        <div id="edu3" class="accordion-collapse collapse" data-bs-parent="#eduAccordion"><div class="accordion-body">Identifies the most frequent, meaningful terms in a document to summarize what it emphasizes.</div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#edu4">TF-IDF</button></h3>
+        <div id="edu4" class="accordion-collapse collapse" data-bs-parent="#eduAccordion"><div class="accordion-body">Term Frequency–Inverse Document Frequency weighs each word by how often it appears in a document versus how common it is overall, highlighting distinctive terms.</div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#edu5">Cosine Similarity</button></h3>
+        <div id="edu5" class="accordion-collapse collapse" data-bs-parent="#eduAccordion"><div class="accordion-body">Measures the angle between two documents' term vectors to score how similar their language is, from 0% to 100%.</div></div>
+      </div>
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#edu6">Skill Matching</button></h3>
+        <div id="edu6" class="accordion-collapse collapse" data-bs-parent="#eduAccordion"><div class="accordion-body">Compares the recognized skills in the resume against those required by the job description to find matches and gaps.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRIVACY ================= -->
+<section class="section-pad" style="background:var(--white)">
+  <div class="container">
+    <div class="privacy-banner">
+      <i class="bi bi-shield-lock"></i>
+      <p class="mb-0">Private by design. Your documents are processed locally in your browser and are not uploaded to a server.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer-sr">
+  <div class="container d-flex flex-wrap justify-content-between gap-3">
+    <div>
+      <strong style="color:var(--white)">SmartResume</strong>
+      <p class="mb-0">Resume Intelligence, computed entirely in your browser.</p>
+    </div>
+    <div>
+      <p class="mb-0">Skill Match Score is not a guaranteed ATS score. Results are informational.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= PREVIEW MODAL ================= -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Extracted Text Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <pre id="previewModalContent" style="white-space:pre-wrap; font-family:var(--font-body); font-size:0.88rem;"></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= HISTORY VIEW MODAL ================= -->
+<div class="modal fade" id="historyViewModal" tabindex="-1" aria-labelledby="historyViewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="historyViewModalLabel">Saved Analysis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="historyViewModalBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="sr-toast" id="srToast" role="status" aria-live="polite"></div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
+<!-- Mammoth.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+<!-- App scripts -->
+<script src="js/skills.js"></script>
+<script src="js/nlp.js"></script>
+<script src="js/document-parser.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
