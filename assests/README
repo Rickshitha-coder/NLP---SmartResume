@@ -1,0 +1,8 @@
+# Assets
+
+This project does not use any external image or media assets. All visuals
+(the hero mock-up card, icons, score rings, progress bars) are built with
+pure HTML and CSS so the app stays lightweight and fully self-contained.
+
+This folder is kept as a placeholder in case you want to add a favicon,
+Open Graph image, or other static assets later.
